@@ -5,12 +5,12 @@
   "main": "index.ts",
   "scripts": {
     "start": "tsc src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "bhirmbani",
   "license": "ISC",
-  "dependencies": {
-    "@types/node": "^12.12.6",
-    "typescript": "^3.7.2"
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^24.9.0"
   }
 }

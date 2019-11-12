@@ -1,114 +1,152 @@
 class Generator {
-  constructor({ every = 1000, type = 'countdown', hours = 0, minutes = 0, seconds = 0, fun = null }) {
+  constructor({
+    every = 1000,
+    type = "countdown",
+    hours = 0,
+    minutes = 0,
+    seconds = 0,
+    fun = null,
+    listener = {},
+    backupPlan = null,
+    debug = false,
+    onFinish = null
+  }) {
     this.every = every,
     this.type = type,
     this.hours = hours,
     this.minutes = minutes,
     this.seconds = seconds,
-    this.fun = fun
-    this.duration = 0
-    this.runner = null
+    this.fun = fun;
+    this.duration = 0;
+    this.runner = null;
+    this.listener = {
+      hour: listener.hour,
+      minute: listener.minute,
+      second: listener.second
+    };
+    this.backupPlan = backupPlan;
+    this.debug = debug;
+    this.onFinish = onFinish;
   }
 
-  // hour() {
+  processHour() {
+    if (this.hours.toString().length === 1) {
+      return `0${this.hours}`;
+    }
+    return this.hours;
+  }
 
-  // }
+  processMinute() {
+    if (this.minutes.toString().length === 1) {
+      return `0${this.minutes}`;
+    }
+    return this.minutes;
+  }
 
-  // minute() {
-    
-  // }
-
-  // second() {
-
-  // }
+  processSecond() {
+    if (this.seconds.toString().length === 1) {
+      return `0${this.seconds}`;
+    }
+    return this.seconds;
+  }
 
   makeTimer() {
-    if (this.type === 'timer') {
-      this.hours = 0
-      this.minutes = 0
-      this.seconds = 0
+    if (this.type === "timer") {
+      this.hours = 0;
+      this.minutes = 0;
+      this.seconds = 0;
     }
   }
 
   makeDuration() {
-    let hours = this.hours * 3600000
-    let minutes = this.minutes * 60000
-    let seconds = this.seconds * 1000
-    this.duration = hours + minutes + seconds
+    let hours = this.hours * 3600000;
+    let minutes = this.minutes * 60000;
+    let seconds = this.seconds * 1000;
+    this.duration = hours + minutes + seconds + 1000;
   }
 
-  processHour() {
-    this.hours -= 1
+  decrementHour() {
+    this.hours -= 1;
   }
 
-  processMinute() {
-    this.minutes -= 1
+  decrementMinute() {
+    this.minutes -= 1;
   }
 
-  processSecond() {
-    this.seconds -= 1
+  decrementSecond() {
+    this.seconds -= 1;
+  }
+
+  incrementMinute() {
+    this.minutes += 1;
+  }
+
+  incrementSecond() {
+    this.seconds += 1;
+  }
+
+  incrementHour() {
+    this.hours += 1;
   }
 
   processCountdown() {
     if (this.hours > 0 && this.minutes === 0 && this.seconds === 0) {
-      this.processHour()
-      this.minutes = 60
+      this.decrementHour();
+      this.minutes = 60;
     }
     if (this.minutes > 0 && this.seconds === 0) {
-      this.processMinute()
-      this.seconds = 60
+      this.decrementMinute();
+      this.seconds = 60;
     }
-    this.processSecond()
+    this.decrementSecond();
   }
 
   processTimer() {
-    // if (this.hours > 0 && this.minutes === 0 && this.seconds === 0) {
-    //   this.processHour()
-    //   this.minutes = 60
-    // }
-    // if (this.minutes > 0 && this.seconds === 0) {
-    //   this.processMinute()
-    //   this.seconds = 60
-    // }
-    this.seconds += 1
+    if (this.minutes === 59 && this.seconds === 59) {
+      this.incrementHour();
+      this.decrementMinute();
+    }
+    if (this.seconds === 59) {
+      this.incrementMinute();
+      this.decrementSecond();
+    }
+    this.incrementSecond();
   }
 
   process() {
-    console.log(this.duration, this.hours, this.minutes, this.seconds)
-    if (this.type === 'timer') {
-      this.processTimer()
-    } else if (this.type === 'countdown') {
-      this.processCountdown()
-    } else {
-      throw new Error('type is not available')
+    this.backupPlan(this.hours, this.minutes, this.seconds);
+    this.listener.hour(this.processHour());
+    this.listener.minute(this.processMinute());
+    this.listener.second(this.processSecond());
+    if (this.debug) {
+      console.log(
+        `duration: ${this.duration}, hour: ${this.hours}, minute: ${
+          this.minutes
+        }, second: ${this.seconds}`
+      );
     }
-    // let hour = 0
-    // let minute = 0
-    // let second = 0
-    
-    // if (this.type === 'countdown') {
-    //   this.processCountdown()
-    // } else if (this.type === 'timer') {
-      
-    // } else {
-    //   throw new Error('type is not available')
-    // }
-    // type timer
-    
+    if (this.type === "timer") {
+      this.processTimer();
+    } else if (this.type === "countdown") {
+      this.processCountdown();
+    } else {
+      throw new Error("type is not available");
+    }
   }
 
   run() {
-    this.makeDuration()
-    this.makeTimer()
-    if(this.fun === null) {
-      this.runner = setInterval(() => this.process(), this.every)
+    this.makeDuration();
+    this.makeTimer();
+    if (this.fun === null) {
+      this.runner = setInterval(() => this.process(), this.every);
     } else {
-      this.runner = setInterval(() => this.fun(), this.every)
+      this.runner = setInterval(() => this.fun(), this.every);
     }
-    setTimeout(() => clearInterval(this.runner), this.duration);
-    return this
+    setTimeout(() => {
+      clearInterval(this.runner);
+      this.onFinish();
+    }, this.duration);
   }
-
 }
 
 module.exports = Generator
