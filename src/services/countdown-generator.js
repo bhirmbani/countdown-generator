@@ -6,10 +6,14 @@ class Generator {
     minutes = 0,
     seconds = 0,
     fun = null,
-    listener = {},
-    backupPlan = null,
+    listener = {
+      hour: () => null,
+      minute: () => null,
+      second: () => null
+    },
+    backupPlan = () => null,
     debug = false,
-    onFinish = null
+    onFinish = () => null
   }) {
     this.every = every,
     this.type = type,
