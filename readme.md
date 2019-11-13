@@ -2,6 +2,9 @@
 
 countdown generator is an opiniated javascript library that can be combined with any javascript lib/framework to create a timer or countdown functionality.
 
+# How to install
+`npm i @bhirmbani/countdown-generator`
+
 # Features
 
 - Vanilla javascript.
@@ -17,7 +20,7 @@ soon..
 # Examples
 **React Hooks**
 ```
-import CountdownGenerator from "./countdown-generator";
+import CountdownGenerator from "@bhirmbani/countdown-generator";
 
 function Component() {
   const [hour, setHour] = useState(0);

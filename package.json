@@ -1,16 +1,22 @@
 {
-  "name": "countdown-generator",
+  "name": "@bhirmbani/countdown-generator",
   "version": "1.0.0",
   "description": "an opinionated countdown generator for any javascript project.",
-  "main": "index.ts",
+  "main": "src/index.js",
   "scripts": {
     "start": "node ./src/index.js",
     "test": "jest"
   },
-  "author": "bhirmbani",
-  "license": "ISC",
+  "author": "bhirmbani <bhirmbani@gmail.com>",
+  "license": "MIT",
+  "repository": "https://github.com/bhirmbani/countdown-generator",
   "dependencies": {},
   "devDependencies": {
     "jest": "24.9.0"
-  }
+  },
+  "keywords": [
+    "javascript",
+    "countdown-javascript",
+    "frontend"
+  ]
 }
