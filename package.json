@@ -1,7 +1,7 @@
 {
   "name": "countdown-generator",
   "version": "1.0.0",
-  "description": "an opinionated  countdown generator for any javascript project.",
+  "description": "an opinionated countdown generator for any javascript project.",
   "main": "index.ts",
   "scripts": {
     "start": "node ./src/index.js",
