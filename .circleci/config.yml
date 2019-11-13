@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-    'build and tests':
+    build-and-test:
         working_directory: ~/countdown-generator
         docker:
             - {image: 'circleci/node:12.11.1'}
@@ -10,3 +10,8 @@ jobs:
             - {run: 'npm install'}
             - {save_cache: {paths: [~/countdown-generator/cache], key: dependency-cache}}
             - {run: 'npm test'}
+workflows:
+  version: 2
+  master:
+    jobs:
+      - build-and-test
