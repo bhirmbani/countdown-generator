@@ -14,8 +14,8 @@ countdown generator is an opiniated javascript library that can be combined with
 - Custom interval.
 - Custom label.
 
-# Demos
-soon..
+# Demo
+Curious? [Simple codesandbox demo](https://codesandbox.io/s/countdown-generator-pwc6c).
 
 # Examples
 **React Hooks**
