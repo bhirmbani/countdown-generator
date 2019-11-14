@@ -1,17 +1,45 @@
 version: 2.1
+defaults: &defaults
+  working_directory: ~/countdown-generator
+  docker:
+    - {image: 'circleci/node:12.11.1'}
 jobs:
     build-and-test:
-        working_directory: ~/countdown-generator
-        docker:
-            - {image: 'circleci/node:12.11.1'}
+        <<: *defaults
         steps:
             - checkout
             - {restore_cache: {keys: ['dependency-cache-{{ checksum "package-lock.json" }}', dependency-cache-]}}
             - {run: 'npm install'}
-            - {save_cache: {paths: [~/countdown-generator/cache], key: dependency-cache}}
             - {run: 'npm test'}
+            - {save_cache: {paths: [~/countdown-generator/cache], key: dependency-cache}}
+            - persist_to_workspace:
+                root: ~/countdown-generator
+                paths:
+                  - .
+    deploy-npm:
+      <<: *defaults
+      steps:
+        - attach_workspace:
+            at: ~/countdown-generator
+        - run:
+            name: Authenticate with registry
+            command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/countdown-generator/.npmrc
+        - run:
+            name: Publish package
+            command: npm publish --access public
+
 workflows:
   version: 2
-  master:
+  test-deploy:
     jobs:
       - build-and-test
+
+      - deploy-npm:
+         requires:
+         - build-and-test
+         filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+
