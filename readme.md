@@ -93,4 +93,4 @@ customLabel.second | string | Label that will be provided after second value | -
 # Feel Free to contribute! ✨
 Fork this repo and create pull request. Open for any issues!
 
-please use version 1.0.1
+please use version 1.0.1 and above
